@@ -4,19 +4,28 @@ class Account:
         self.balance = 0.
         self.history = []
 
-    def top_up(self):
-        amount = float(input('На сколько пополнить счет? '))
+    def get_balance(self):
+        return self.balance
+
+    def top_up(self, amount=None):
+        if amount is None:
+            amount = float(input('На сколько пополнить счет? '))
         self.balance += amount
 
-    def buy(self):
-        cost = float(input('Сколько стоит покупка? '))
+    def buy(self, cost=None, name=None):
+        if cost is None:
+            cost = float(input('Сколько стоит покупка? '))
         if cost > self.balance:
             print(f'У вас на счету: {self.balance}. На покупку стоимостью {cost} не хватает средств.')
             return None
-        name = input('Название покупки? ')
+        if name is None:
+            name = input('Название покупки? ')
         self.balance -= cost
         self.history.append({'name': name, 'cost': cost})
         return None
+
+    def get_history(self):
+        return self.history
 
     def print_history(self):
         if len(self.history) > 0:
