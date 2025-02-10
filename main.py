@@ -6,8 +6,9 @@ from bank_account import run_bank_account
 from quiz import play_quiz
 
 
-def create_folder():
-    name = input("Введите название папки: ")
+def create_folder(name=None):
+    if name is None:
+        name = input("Введите название папки: ")
     os.makedirs(name, exist_ok=True)
     print(f"Папка '{name}' создана.")
 
@@ -57,13 +58,18 @@ def list_files():
             print(item)
 
 
-def os_info():
+def get_os_info():
+    return platform.system(), platform.release()
+
+
+def print_os_info():
+    system, release = get_os_info()
     print("Информация об ОС:")
-    print(platform.system(), platform.release())
+    print(system, release)
 
 
-def creator_info():
-    print("Создатель программы: Рамиль Яубатыров")
+def author_info():
+    return "Создатель программы: Рамиль Яубатыров"
 
 
 def change_directory():
@@ -109,9 +115,9 @@ def main():
         elif choice == "6":
             list_files()
         elif choice == "7":
-            os_info()
+            print_os_info()
         elif choice == "8":
-            creator_info()
+            print(author_info())
         elif choice == "9":
             play_quiz()
         elif choice == "10":
