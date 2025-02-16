@@ -44,6 +44,18 @@ def list_directory():
         print(item)
 
 
+def list_directory_to_file():
+    print("Сохраняем содержимое рабочей директории в файл...")
+    folders = [x for x in os.listdir() if os.path.isdir(x)]
+    files = [x for x in os.listdir() if os.path.isfile(x)]
+    with open('listdir.txt', 'w') as f:
+        f.write('folders: ')
+        f.write(str(folders))
+        f.write('\n')
+        f.write('files: ')
+        f.write(str(files))
+
+
 def list_folders():
     print("Папки в рабочей директории:")
     for item in os.listdir():
@@ -92,14 +104,15 @@ def main():
         print("2 - Удалить (файл/папку)")
         print("3 - Копировать (файл/папку)")
         print("4 - Просмотр содержимого рабочей директории")
-        print("5 - Посмотреть только папки")
-        print("6 - Посмотреть только файлы")
-        print("7 - Просмотр информации об операционной системе")
-        print("8 - Создатель программы")
-        print("9 - Играть в викторину")
-        print("10 - Мой банковский счет")
-        print("11 - Смена рабочей директории")
-        print("12 - Выход")
+        print("5 - Сохранить содержимое рабочей директории в файл")
+        print("6 - Посмотреть только папки")
+        print("7 - Посмотреть только файлы")
+        print("8 - Просмотр информации об операционной системе")
+        print("9 - Создатель программы")
+        print("10 - Играть в викторину")
+        print("11 - Мой банковский счет")
+        print("12 - Смена рабочей директории")
+        print("13 - Выход")
 
         choice = input("Выберите действие: ")
         if choice == "1":
@@ -111,20 +124,22 @@ def main():
         elif choice == "4":
             list_directory()
         elif choice == "5":
-            list_folders()
+            list_directory_to_file()
         elif choice == "6":
-            list_files()
+            list_folders()
         elif choice == "7":
-            print_os_info()
+            list_files()
         elif choice == "8":
-            print(author_info())
+            print_os_info()
         elif choice == "9":
-            play_quiz()
+            print(author_info())
         elif choice == "10":
-            run_bank_account()
+            play_quiz()
         elif choice == "11":
-            change_directory()
+            run_bank_account()
         elif choice == "12":
+            change_directory()
+        elif choice == "13":
             print("Выход из программы.")
             break
         else:

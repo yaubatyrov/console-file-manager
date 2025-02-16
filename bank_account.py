@@ -1,8 +1,19 @@
+import os
+import json
+import pickle
+
 
 class Account:
-    def __init__(self):
-        self.balance = 0.
+
+    ACCOUNT_FILE_PICKLE = r'data/account_info.pickle'
+    ACCOUNT_FILE_JSON = r'data/account_info.json'
+
+    def __init__(self, new=False):
+        self.file_format = 'json'
+        self.balance = 0
         self.history = []
+        if not new:
+            self.read_from_file()
 
     def get_balance(self):
         return self.balance
@@ -35,6 +46,38 @@ class Account:
             print('История покупок пуста.')
         return None
 
+    def read_from_file(self):
+        if self.file_format == 'json':
+            return self.read_from_json()
+        else:
+            return self.read_from_pickle()
+
+    def read_from_pickle(self):
+        if os.path.exists(self.ACCOUNT_FILE_PICKLE):
+            with open(self.ACCOUNT_FILE_PICKLE, 'rb') as f:
+                self.balance, self.history = pickle.load(f)
+
+    def read_from_json(self):
+        if os.path.exists(self.ACCOUNT_FILE_JSON):
+            with open(self.ACCOUNT_FILE_JSON, 'r') as f:
+                data = json.load(f)
+                self.balance = data['balance']
+                self.history = data['history']
+
+    def save_to_file(self):
+        if self.file_format == 'json':
+            return self.save_to_json()
+        else:
+            return self.save_to_pickle()
+
+    def save_to_pickle(self):
+        with open(self.ACCOUNT_FILE_PICKLE, 'wb') as f:
+            pickle.dump((self.balance, self.history), f)
+
+    def save_to_json(self):
+        with open(self.ACCOUNT_FILE_JSON, 'w') as f:
+            json.dump({'balance': self.balance, 'history': self.history}, f)
+
 
 def run_bank_account():
     account = Account()
@@ -52,6 +95,11 @@ def run_bank_account():
         elif choice == '3':
             account.print_history()
         elif choice == '4':
+            account.save_to_file()
             break
         else:
             print('Неверный пункт меню')
+
+
+if __name__ == '__main__':
+    run_bank_account()
