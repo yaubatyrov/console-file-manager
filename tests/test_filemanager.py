@@ -56,14 +56,14 @@ def test_create_folder():
 
 
 def test_account_top_up():
-    account = Account()
+    account = Account(new=True)
     assert account.get_balance() == 0
     account.top_up(5)
     assert account.get_balance() == 5
 
 
 def test_buy():
-    account = Account()
+    account = Account(new=True)
     account.top_up(5)
     assert account.get_balance() == 5
     account.buy(3, 'паровозик')
@@ -71,3 +71,12 @@ def test_buy():
     assert account.get_history()[-1]['name'] == 'паровозик'
 
 
+def test_account_save_to_file():
+    account = Account(new=True)
+    assert account.get_balance() == 0
+    account.top_up(5)
+    assert account.get_balance() == 5
+    account.save_to_file()
+
+    account_2 = Account(new=False)
+    assert account_2.get_balance() == 5

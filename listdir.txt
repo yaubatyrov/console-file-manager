@@ -1,0 +1,2 @@
+folders: ['.git', '.idea', '.pytest_cache', 'tests', '__pycache__']
+files: ['.gitignore', 'account_info.json', 'account_info.pickle', 'bank_account.py', 'LICENSE', 'main.py', 'quiz.py']
