@@ -20,12 +20,27 @@ class Account:
 
     def top_up(self, amount=None):
         if amount is None:
-            amount = float(input('На сколько пополнить счет? '))
+            amount_str = input('На сколько пополнить счет? ')
+            try:
+                amount = float(amount_str)
+            except ValueError:
+                print('Не удалось пополнить счет. Для пополнения необходимо ввести число')
+                return
+
+        if amount <= 0:
+            print('Ошибка: сумма пополнения должна быть положительной.')
+            return
+
         self.balance += amount
+        print(f'Счет пополнен на {amount}. Текущий баланс: {self.balance}')
 
     def buy(self, cost=None, name=None):
         if cost is None:
-            cost = float(input('Сколько стоит покупка? '))
+            try:
+                cost = float(input('Сколько стоит покупка? '))
+            except ValueError:
+                print('Не удалось совершить покупку. Цена должна быть числом')
+                return
         if cost > self.balance:
             print(f'У вас на счету: {self.balance}. На покупку стоимостью {cost} не хватает средств.')
             return None
@@ -40,17 +55,13 @@ class Account:
 
     def print_history(self):
         if len(self.history) > 0:
-            for item in self.history:
-                print(item)
+            [print(item) for item in self.history]
         else:
             print('История покупок пуста.')
         return None
 
     def read_from_file(self):
-        if self.file_format == 'json':
-            return self.read_from_json()
-        else:
-            return self.read_from_pickle()
+        return self.read_from_json() if self.file_format == 'json' else self.read_from_pickle()
 
     def read_from_pickle(self):
         if os.path.exists(self.ACCOUNT_FILE_PICKLE):
@@ -60,15 +71,16 @@ class Account:
     def read_from_json(self):
         if os.path.exists(self.ACCOUNT_FILE_JSON):
             with open(self.ACCOUNT_FILE_JSON, 'r') as f:
-                data = json.load(f)
-                self.balance = data['balance']
-                self.history = data['history']
+                try:
+                    data = json.load(f)
+                except Exception as e:
+                    print(f'Не удалось прочитать файл {self.ACCOUNT_FILE_JSON}, детали: {e}')
+                else:
+                    self.balance = data['balance']
+                    self.history = data['history']
 
     def save_to_file(self):
-        if self.file_format == 'json':
-            return self.save_to_json()
-        else:
-            return self.save_to_pickle()
+        return self.save_to_json() if self.file_format == 'json' else self.save_to_pickle()
 
     def save_to_pickle(self):
         with open(self.ACCOUNT_FILE_PICKLE, 'wb') as f:

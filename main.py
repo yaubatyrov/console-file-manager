@@ -9,17 +9,29 @@ from quiz import play_quiz
 def create_folder(name=None):
     if name is None:
         name = input("Введите название папки: ")
-    os.makedirs(name, exist_ok=True)
+    try:
+        os.makedirs(name, exist_ok=True)
+    except Exception as e:
+        print(f'Не удалось создать папку "{name}" в текущей рабочей директории. Детали: {e}')
+        return
     print(f"Папка '{name}' создана.")
 
 
 def delete_file_or_folder():
     name = input("Введите название файла или папки для удаления: ")
     if os.path.isdir(name):
-        shutil.rmtree(name)
+        try:
+            shutil.rmtree(name)
+        except Exception as e:
+            print(f'Не удалось удалить папку "{name}" в текущей рабочей директории. Детали: {e}')
+            return
         print(f"Папка '{name}' удалена.")
     elif os.path.isfile(name):
-        os.remove(name)
+        try:
+            os.remove(name)
+        except Exception as e:
+            print(f'Не удалось удалить файл "{name}" в текущей рабочей директории. Детали: {e}')
+            return
         print(f"Файл '{name}' удален.")
     else:
         print("Файл или папка не найдены.")
@@ -29,10 +41,18 @@ def copy_file_or_folder():
     source = input("Введите название копируемого файла или папки: ")
     destination = input("Введите новое имя файла или папки: ")
     if os.path.isdir(source):
-        shutil.copytree(source, destination)
+        try:
+            shutil.copytree(source, destination)
+        except Exception as e:
+            print(f'Не удалось скопировать папку "{source}" в расположение "{destination}". Детали: {e}')
+            return
         print(f"Папка '{source}' скопирована в '{destination}'.")
     elif os.path.isfile(source):
-        shutil.copy2(source, destination)
+        try:
+            shutil.copy2(source, destination)
+        except Exception as e:
+            print(f'Не удалось скопировать файл "{source}" в расположение "{destination}". Детали: {e}')
+            return
         print(f"Файл '{source}' скопирован в '{destination}'.")
     else:
         print("Файл или папка не найдены.")
@@ -40,34 +60,31 @@ def copy_file_or_folder():
 
 def list_directory():
     print("Содержимое рабочей директории:")
-    for item in os.listdir():
-        print(item)
+    [print(item) for item in os.listdir()]
 
 
 def list_directory_to_file():
     print("Сохраняем содержимое рабочей директории в файл...")
-    folders = [x for x in os.listdir() if os.path.isdir(x)]
-    files = [x for x in os.listdir() if os.path.isfile(x)]
-    with open('listdir.txt', 'w') as f:
-        f.write('folders: ')
-        f.write(str(folders))
-        f.write('\n')
-        f.write('files: ')
-        f.write(str(files))
+    folders = (x for x in os.listdir() if os.path.isdir(x))
+    files = (x for x in os.listdir() if os.path.isfile(x))
+    try:
+        with open('listdir.txt', 'w') as f:
+            f.write('folders: ' + str(folders) + '\n')
+            f.write('files: ' + str(files) + '\n')
+    except PermissionError:
+        print("Ошибка: нет прав на запись в текущую директорию.")
+    except Exception as e:
+        print(f"Не удалось сохранить содержимое рабочей директории в файл. Ошибка: {e}")
 
 
 def list_folders():
     print("Папки в рабочей директории:")
-    for item in os.listdir():
-        if os.path.isdir(item):
-            print(item)
+    [print(item) for item in os.listdir() if os.path.isdir(item)]
 
 
 def list_files():
     print("Файлы в рабочей директории:")
-    for item in os.listdir():
-        if os.path.isfile(item):
-            print(item)
+    [print(item) for item in os.listdir() if os.path.isfile(item)]
 
 
 def get_os_info():
